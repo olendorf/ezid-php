@@ -21,6 +21,10 @@ class ConnectionSpec extends ObjectBehavior
         $this->url->shouldEqual($this::DEFAULT_URL);
     }
     
+    ///////////////////////////////////////////////////////////////////////
+    // This block tests features associated with configuration and
+    // construction
+    /////////////////////////////////////////////////////////////////////
     function it_should_initialize_from_config()
     {
         $config = json_decode(file_get_contents("config/ezid.json"), true);
