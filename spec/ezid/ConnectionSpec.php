@@ -28,11 +28,18 @@ class ConnectionSpec extends ObjectBehavior
         $this->password->shouldEqual($config["password"]);
     }
     
-    function it_should_override_config_with_constructor_options()
+    function it_should_override_authentation_credentials_config_with_constructor_options()
     {
         $opts = array("username"=>"john_doe", "password"=>"foobaz");
         $this->beConstructedWith($opts);
         $this->username->shouldEqual($opts["username"]);
         $this->password->shouldEqual($opts["password"]);
+    }
+    
+    function it_should_override_url_with_constructor_options()
+    {
+        $url = 'example.com';
+        $this->beConstructedWith(array("url" => $url));
+        $this->url->shouldEqual($url);
     }
 }
