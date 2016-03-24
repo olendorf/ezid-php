@@ -1,4 +1,7 @@
 {
+    "require": {
+      "guzzlehttp/guzzle": "~6.0"
+    },
     "require-dev": {
         "phpspec/phpspec": "~2.0"
     },
