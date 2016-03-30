@@ -1,4 +1,7 @@
 {
-    "username": "random_citizen",
-    "password": "foobar"
+    "username": "ss1",
+    "password": "0912_schsph",
+    "doi_shoulder": "doi:10.5072/FK2",  
+    "ark_shoulder": "ark:/99999/fk4 ",
+    "__comment": "the shoulders are test shoulders provided by EZID. update to fit your own in production."
 }
