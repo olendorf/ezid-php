@@ -137,6 +137,33 @@ class Connection
         return $client->request('POST');
     }
     
+    public function get_identifier_metadata($identifier)
+    {
+        $client = new Client([
+            'base_uri' => $this->url."/id/".$identifier
+        ]);
+        
+        return $client->request('GET');
+        
+    }
+    
+    public function parse_response_metadata($metadata)
+    {
+        $split_array = explode("\n", $metadata);
+
+        $meta_array = array();
+        
+        foreach($split_array as $line)
+        {
+            if(!empty($line))
+            {
+                $temp = explode(": ", $line);
+                $meta_array[$temp[0]] = $temp[1];
+            }
+        }
+        return $meta_array;
+    }
+    
     private function format_metadata($meta)
     {
     return <<<EOD
@@ -146,5 +173,7 @@ datacite.publisher: {$meta['publisher']}
 datacite.publicationyear: {$meta['publicationyear']}
 EOD;
     }
+
+ 
 }
 ?>

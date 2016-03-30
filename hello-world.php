@@ -10,16 +10,34 @@ $meta = array(
 );
 
 $data = <<<EOT
-datacite.creator: {$meta['creator']}
-datacite.title: {$meta['title']}
-
+success: doi:10.5072/FK256FC28FB1E16B
+datacite.publisher: Random Houses
+_profile: datacite
+_export: yes
+datacite.creator: Random Citizen
+datacite.publicationyear: 2015
+_datacenter: CDL.CDL
+_updated: 1459366139
+_target: http://ezid.cdlib.org/id/doi:10.5072/FK256FC28FB1E16B
+datacite.title: Random Thoughts
+_ownergroup: ss1
+_owner: ss1
+_shadowedby: ark:/b5072/fk256fc28fb1e16b
+_created: 1459366139
+_status: publicationyear
 EOT;
 
-echo $data;
 
-echo uniqid();
+$data_array = explode("\n", $data);
 
+$data_hash = array();
 
-$identifier = "doi:10.5072/FK2".uniqid();
+foreach($data_array as $line)
+{
+    $temp = explode(": ", $line);
+    $data_hash[$temp[0]] = $temp[1];
+}
 
-echo preg_quote($identifier);
+print_r($data_hash);
+
+?>

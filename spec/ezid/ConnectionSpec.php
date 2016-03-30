@@ -2,12 +2,17 @@
 
 namespace spec\ezid;
 
+include 'src/ezid/Connection.php';
+
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use ezid;
 
 class ConnectionSpec extends ObjectBehavior
 {
     const DEFAULT_URL = 'https://ezid.cdlib.org';
+    
+    const DOI_REGEX = '/\b(doi:10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&\'<>])[[:graph:]])+)\b/i';
     
     ##
     # requestb.in urls are ephemeral. If this is set to one, and its not working
@@ -86,18 +91,46 @@ class ConnectionSpec extends ObjectBehavior
         $identifier = "doi:10.5072/FK2".uniqid();
         
         $response = $this->create($identifier, $this->meta());
-        $response_body = $response->getWrappedObject();
+        $response_object = $response->getWrappedObject();
         $response->GetStatusCode()->shouldEqual(201);
         $response->GetReasonPhrase()->shouldEqual('CREATED');
+        
+        preg_match($this::DOI_REGEX, $response_object->getBody(), $matches);
+        expect(strtoupper($matches[0]))->toEqual(strtoupper($identifier));
     }
     
     function it_should_mint_a_doi()
     {
         $response = $this->mint('doi', $this->meta());
-        $response_body = $response->getWrappedObject();
-        echo "\r\nBody: ".$response_body->getBody()."\r\n";
+        $response_object = $response->getWrappedObject();
         $response->GetStatusCode()->shouldEqual(201);
         $response->GetReasonPhrase()->shouldEqual('CREATED');
+        
+        preg_match($this::DOI_REGEX, $response_object->getBody(), $matches);
+        
+        // Test that an actual doi was minted using rgex.
+        expect(preg_match($this::DOI_REGEX, $response_object->getBody(), $matches))->toEqual(1);
+    }
+    
+    function it_should_get_doi_metadata()
+    {
+        $identifier = "doi:10.5072/FK2".uniqid();
+        $this->existing_identifier($identifier, $this->meta());
+        
+        $response = $this->get_identifier_metadata($identifier);
+        
+        $response_object = $response->getWrappedObject();
+        
+        $metadata = ezid\Connection::parse_response_metadata((string)$response_object->getBody());
+        
+        expect($metadata["datacite.creator"])->toEqual($this->meta()["creator"]);
+        
+    }
+    
+    function existing_identifier($identifier, $meta)
+    {
+        $client = new ezid\Connection();
+        $client->create($identifier, $this->meta());
     }
     
     function meta()
