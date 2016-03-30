@@ -38,6 +38,14 @@ foreach($data_array as $line)
     $data_hash[$temp[0]] = $temp[1];
 }
 
-print_r($data_hash);
+$key = '_status';
+if(substr($key, 0, 1) == '_')
+{
+    echo 'it worked';
+}
+else
+{
+    echo 'it failed';
+}
 
 ?>

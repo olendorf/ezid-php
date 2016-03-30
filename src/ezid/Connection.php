@@ -183,6 +183,18 @@ class Connection
         return $client->request('POST');
     }
     
+    
+
+    public function delete_identifier($identifier)
+    { 
+        $client = new Client([
+            'auth' => [$this->username, $this->password],
+            'base_uri' => $this->url."/id/".$identifier
+        ]);
+        
+        return $client->request('DELETE');
+    }
+    
      /**
      * Parses the string returned by EZID and returns an associative array.
      * 
@@ -221,7 +233,14 @@ class Connection
         $string_meta = "";
         foreach($meta as $key => $value)
         {
-            $string_meta = $string_meta."datacite.".$key.": ".$value."\r\n";
+            if(substr($key, 0, 1) == '_')
+            {
+                $string_meta = $string_meta.$key.": ".$value."\r\n";
+            }
+            else 
+            {
+                $string_meta = $string_meta."datacite.".$key.": ".$value."\r\n";
+            }
         }
         return $string_meta;
     }

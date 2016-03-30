@@ -144,6 +144,26 @@ class ConnectionSpec extends ObjectBehavior
         expect(empty($metadata['datacite.resourcetype']))->toBe(true);
     }
     
+    function it_should_delete_reserved_identifiers()
+    {
+        $identifier = "doi:10.5072/FK2".uniqid();
+        $meta = $this->meta();
+        $meta['_status'] = 'reserved';
+        
+        $this->existing_identifier($identifier, $meta);
+       
+        // Get the metadata and make sure that it was updated.
+        $get_response = $this->get_identifier_metadata($identifier);
+        
+        $response_object = $get_response->getWrappedObject();
+        
+        $metadata = ezid\Connection::parse_response_metadata((string)$response_object->getBody());
+        
+        $response = $this->delete_identifier($identifier);
+        
+        $response->GetStatusCode()->shouldEqual(200);
+    }
+    
     
     ///////////////////////////////////////////////
     //////////////////////////////////////////////
@@ -154,7 +174,7 @@ class ConnectionSpec extends ObjectBehavior
     function existing_identifier($identifier, $meta)
     {
         $client = new ezid\Connection();
-        $client->create($identifier, $this->meta());
+        return $client->create($identifier, $meta);
     }
     
     function meta()
