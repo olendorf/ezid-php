@@ -112,7 +112,7 @@ class ConnectionSpec extends ObjectBehavior
         expect(preg_match($this::DOI_REGEX, $response_object->getBody(), $matches))->toEqual(1);
     }
     
-    function it_should_get_doi_metadata()
+    function it_should_get_identifier_metadata()
     {
         $identifier = "doi:10.5072/FK2".uniqid();
         $this->existing_identifier($identifier, $this->meta());
