@@ -69,17 +69,11 @@ class Connection
         $this->ark_shoulder = empty($opts["ark_shoulder"]) ? $config["ark_shoulder"] : $opts["ark_shoulder"];
     }
 
-    public function get()
-    {
-        $client = new Client([
-            'base_uri' => $this->url,
-        ]);
-        
-        $response = $client->request('GET', '', ['auth' => [$this->username, $this->password]]);
-        
-        return $response;
-    }
-
+    /**
+     * Returns the status of the EZID server
+     * 
+     * @return GuzzleHttp\Psr7\Response The http response in the form of a Guzzle response
+     */
     public function status()
     {
         $client = new Client([
@@ -90,7 +84,14 @@ class Connection
         return $response;
     }
     
-    
+    /**
+     * Creates a DOI or ARK with the given identifier
+     * 
+     * @param string $identifier The desired DOI or ARK identifier
+     * @param mixed[] $meta Associative array of the metadata. See EZID for more.
+     * 
+     * @return GuzzleHttp\Psr7\Response The http response in the form of a Guzzle response
+     */
     public function create($identifier, $meta)
     {
         $str = $this->format_metadata($meta);
@@ -108,8 +109,14 @@ class Connection
         return $client->request('PUT');
     }
     
-    
-
+     /**
+     * Mints a DOI or ARK with the given shoulder
+     * 
+     * @param string $shoulder The desired DOI or ARK shoulder
+     * @param mixed[] $meta Associative array of the metadata. See EZID for more.
+     * 
+     * @return GuzzleHttp\Psr7\Response The http response in the form of a Guzzle response
+     */
     public function mint($shoulder, $meta)
     {
         $str = $this->format_metadata($meta);
@@ -137,6 +144,16 @@ class Connection
         return $client->request('POST');
     }
     
+     /**
+     * Gets the metadata for a given identifier. EZID returns the metadata
+     * as a structured string. Use parse_response_metadata($metadata) to
+     * parse the metadata string into an associative array.
+     * 
+     * 
+     * @param string $identifier The desired DOI or ARK identifier
+     * 
+     * @return GuzzleHttp\Psr7\Response The http response in the form of a Guzzle response
+     */
     public function get_identifier_metadata($identifier)
     {
         $client = new Client([
@@ -147,6 +164,14 @@ class Connection
         
     }
     
+     /**
+     * Parses the string returned by EZID and returns an associative array.
+     * 
+     * 
+     * @param string $identifier The desired DOI or ARK identifier
+     * 
+     * @return mixed[] An associative array of the metadata.
+     */
     public function parse_response_metadata($metadata)
     {
         $split_array = explode("\n", $metadata);
@@ -164,6 +189,14 @@ class Connection
         return $meta_array;
     }
     
+    /**
+     * Formats an associative array of metdata into the string
+     * required by EZID.
+     * 
+     * @param mixed[] Associative array of metdata.
+     * 
+     * @return string The EZID formatted string.
+     */
     private function format_metadata($meta)
     {
     return <<<EOD

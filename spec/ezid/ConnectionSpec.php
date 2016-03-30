@@ -70,15 +70,6 @@ class ConnectionSpec extends ObjectBehavior
     // to add those to your config to run the tests.
     //////////////////////////////////////////////////////////////// 
     
-    /**
-     * Sanity check
-     */ 
-    function it_should_make_a_get_request()
-    {
-        $this->beConstructedWith(array("url" => $this->dev_url));
-        $this->get()->getStatusCode()->shouldEqual(200);
-    }
-    
     function it_should_get_ezid_status()
     {
         $response = $this->status();
@@ -126,6 +117,13 @@ class ConnectionSpec extends ObjectBehavior
         expect($metadata["datacite.creator"])->toEqual($this->meta()["creator"]);
         
     }
+    
+    
+    ///////////////////////////////////////////////
+    //////////////////////////////////////////////
+    //
+    // Helper functions
+    //////////////////////////////////////////////
     
     function existing_identifier($identifier, $meta)
     {
