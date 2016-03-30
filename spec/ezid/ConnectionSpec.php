@@ -7,8 +7,14 @@ use Prophecy\Argument;
 
 class ConnectionSpec extends ObjectBehavior
 {
-    const DEFAULT_URL = 'ezid.cdlib.org';
+    const DEFAULT_URL = 'http://ezid.cdlib.org';
     
+    ##
+    # requestb.in urls are ephemeral. If this is set to one, and its not working
+    # register a new one. Also httpbin.org provides a more stable url and API
+    # if preferred.
+    // private $dev_url = "http://requestb.in/szst68sz";
+    private $dev_url = "http://httpbin.org/";
     
     
     function it_is_initializable()
@@ -42,8 +48,36 @@ class ConnectionSpec extends ObjectBehavior
     
     function it_should_override_url_with_constructor_options()
     {
-        $url = 'example.com';
-        $this->beConstructedWith(array("url" => $url));
-        $this->url->shouldEqual($url);
+        $this->beConstructedWith(array("url" => $this->dev_url));
+        $this->url->shouldEqual($this->dev_url);
+    }
+    
+    ////////////////////////////////////////////////////////////////////
+    //  Testing an external API is problematic at best. Here I am relying 
+    //  on a generic testing service httpbin.org and also ezid's own testing
+    //  services. The tests may fail if either of those services happen to 
+    //  be down. If tests are failing, I suggest using http://hurl.it to
+    //  verify the services are running.
+    
+    // Some of the tests rely on the EZID authentication. You will need
+    // to add those to your config to run the tests.
+    //////////////////////////////////////////////////////////////// 
+    
+    /**
+     * Sanity check
+     */ 
+    function it_should_make_a_get_request()
+    {
+        $this->beConstructedWith(array("url" => $this->dev_url));
+        $this->get()->getStatusCode()->shouldEqual(200);
+    }
+    
+    function it_should_get_ezid_status()
+    {
+        $response = $this->status();
+        $response->getBody()->getContents()->shouldEqual('success: EZID is up');
+        $response->getStatusCode()->shouldEqual(200);
     }
 }
+
+?>
