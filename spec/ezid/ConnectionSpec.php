@@ -118,6 +118,32 @@ class ConnectionSpec extends ObjectBehavior
         
     }
     
+    function it_should_modify_identifier_metadata()
+    {
+        
+        $identifier = "doi:10.5072/FK2".uniqid();
+        $this->existing_identifier($identifier, $this->meta());
+        
+        $new_meta = [
+            "creator" => 'Anonymous Resident',
+            'resourcetype' => ''
+            ];
+            
+        $response = $this->modify_identifier_metadata($identifier, $new_meta);
+        
+        $response->GetStatusCode()->shouldEqual(200);
+        
+        // Get the metadata and make sure that it was updated.
+        $get_response = $this->get_identifier_metadata($identifier);
+        
+        $response_object = $get_response->getWrappedObject();
+        
+        $metadata = ezid\Connection::parse_response_metadata((string)$response_object->getBody());
+        
+        expect($metadata['datacite.creator'])->toEqual($new_meta['creator']);
+        expect(empty($metadata['datacite.resourcetype']))->toBe(true);
+    }
+    
     
     ///////////////////////////////////////////////
     //////////////////////////////////////////////
@@ -137,7 +163,8 @@ class ConnectionSpec extends ObjectBehavior
             "creator" => 'Random Citizen',
             'title' => 'Random Thoughts',
             'publisher' => 'Random Houses',
-            'publicationyear' => '2015'
+            'publicationyear' => '2015',
+            'resourcetype' => 'Text'
         ];
     }
 }

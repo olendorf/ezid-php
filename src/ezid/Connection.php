@@ -164,6 +164,25 @@ class Connection
         
     }
     
+    
+
+    public function modify_identifier_metadata($identifier, $meta)
+    {
+        $str = $this->format_metadata($meta);
+        
+        $client = new Client([
+            'auth' => [$this->username, $this->password],
+            'base_uri' => $this->url."/id/".$identifier,
+            'headers' => [
+                'Content-Type' => 'text/plain; charset=UTF-8',
+                'Content-Length' => strlen($str)
+            ],
+            'body' => $str
+        ]);
+        
+        return $client->request('POST');
+    }
+    
      /**
      * Parses the string returned by EZID and returns an associative array.
      * 
@@ -199,12 +218,12 @@ class Connection
      */
     private function format_metadata($meta)
     {
-    return <<<EOD
-datacite.creator: {$meta['creator']}
-datacite.title: {$meta['title']}
-datacite.publisher: {$meta['publisher']}
-datacite.publicationyear: {$meta['publicationyear']}
-EOD;
+        $string_meta = "";
+        foreach($meta as $key => $value)
+        {
+            $string_meta = $string_meta."datacite.".$key.": ".$value."\r\n";
+        }
+        return $string_meta;
     }
 
  
