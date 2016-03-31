@@ -6,6 +6,8 @@ authentication and shoulders. Its still early in development. Feel free to
 use it, but please be be aware there are probably issues and bugs. 
 If you find them report them or fix them!
 
+For further information about the EZID API visit http://ezid.lib.purdue.edu/doc/apidoc.html. 
+
 
 ## Installation
 
@@ -57,7 +59,9 @@ the values as you wish.
 
 ## Usage
 
-
+This package uses the Guzzle package to handle HTTP requests and is really just a wrapper for that.
+All methods that interact with the EZID API (i.e. that make an HTTP request) return a Guzzle response.
+For more information about Guzzle visit http://docs.guzzlephp.org/en/latest/.
 
 ### Creating The Connection
 
