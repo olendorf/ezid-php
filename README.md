@@ -101,13 +101,7 @@ $client = new ezid\Connection($config);
  
  echo $response->GetStatusCode();  // 201
  
- // Minting an identifier $meta = [
-            "creator" => 'Random Citizen',
-            'title' => 'Random Thoughts',
-            'publisher' => 'Random Houses',
-            'publicationyear' => '2015',
-            'resourcetype' => 'Text'
-        ];
+ // Minting an identifier
         
  $response = $client->mint('doi', $meta);  //uses the shoulder specified in config or on creation of the client.
  
