@@ -85,7 +85,7 @@ $client = new ezid\Connection($config);
 
 ```
 
-### Creating and minting identifiers
+### Creating And Minting Identifiers
 
 ```php
  // Getting Server Status
@@ -137,7 +137,7 @@ $client = new ezid\Connection($config);
     
 ```
 
-### Modifying the metadata
+### Modifying The Metadata
 
 ```php 
  $new_meta = [
@@ -148,7 +148,9 @@ $client = new ezid\Connection($config);
  echo $response->GetStatusCode()  // 200
 ```
 
-### Deleting an identifier (must be reserved)
+### Deleting An Identifier
+
+This will only work if the status of the identifier is **_reserved_**.
 
 ```php
  $response = $client->delete_identifier($identifier);
@@ -156,7 +158,13 @@ $client = new ezid\Connection($config);
 ```
 
 
+## Running The Tests
 
+I used PHPSpec for testing, mostly to try it out. One issue I ran into was the difficulty in testing an
+external API. Rather than mocking out a web server, I just used the actual EZID service, couples with the
+testing shoulders they provide. If you want to run the tests, you will need to have an active EZID account,
+and use your credentials in the ezid.json. Also, in some cases tests may fail if the EZID service is 
+having issues. In the future I may take the time to mock it out correctly.
 
 
 
