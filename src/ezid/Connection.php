@@ -50,10 +50,11 @@ class Connection
      */
     public function __construct($opts = null)
     {
+        $config = array();
         // Read in the json config if it exists. 
-        if(file_exists("config/ezid.json"))
+        if(file_exists(__DIR__.DIRECTORY_SEPARATOR."ezid.json"))
         {
-            $config = json_decode(file_get_contents("config/ezid.json"), true);
+            $config = json_decode(file_get_contents(__DIR__.DIRECTORY_SEPARATOR."ezid.json"), true);
         }
         
         // Override the default url. You would want to do this if you want to

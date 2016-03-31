@@ -14,6 +14,9 @@ class ConnectionSpec extends ObjectBehavior
     
     const DOI_REGEX = '/\b(doi:10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&\'<>])[[:graph:]])+)\b/i';
     
+    const DEV_DOI_SHOULDER = "doi:10.5072/FK2";
+    const DEV_ARK_SHOULDER = "ark:/99999/fk4 ";
+    
     ##
     # requestb.in urls are ephemeral. If this is set to one, and its not working
     # register a new one. Also httpbin.org provides a more stable url and API
@@ -38,7 +41,8 @@ class ConnectionSpec extends ObjectBehavior
     /////////////////////////////////////////////////////////////////////
     function it_should_initialize_from_config()
     {
-        $config = json_decode(file_get_contents("config/ezid.json"), true);
+        $config_file = implode(DIRECTORY_SEPARATOR, array(__DIR__, "..", "..","src", "ezid", "ezid.json"));
+        $config = json_decode(file_get_contents($config_file), true);
         $this->username->shouldEqual($config["username"]);
         $this->password->shouldEqual($config["password"]);
         $this->doi_shoulder->shouldEqual($config["doi_shoulder"]);
@@ -47,7 +51,10 @@ class ConnectionSpec extends ObjectBehavior
     
     function it_should_override_authentation_credentials_config_with_constructor_options()
     {
-        $opts = array("username"=>"john_doe", "password"=>"foobaz");
+        $opts = array_merge(
+            $this->dev_shoulders(), 
+            array("username"=>"john_doe", "password"=>"foobaz")
+            );
         $this->beConstructedWith($opts);
         $this->username->shouldEqual($opts["username"]);
         $this->password->shouldEqual($opts["password"]);
@@ -79,7 +86,8 @@ class ConnectionSpec extends ObjectBehavior
     
     function it_should_create_a_doi()
     {
-        $identifier = "doi:10.5072/FK2".uniqid();
+        $identifier = $this::DEV_DOI_SHOULDER.uniqid();
+        $this->beConstructedWith($this->dev_shoulders());
         
         $response = $this->create($identifier, $this->meta());
         $response_object = $response->getWrappedObject();
@@ -92,6 +100,7 @@ class ConnectionSpec extends ObjectBehavior
     
     function it_should_mint_a_doi()
     {
+        $this->beConstructedWith($this->dev_shoulders());
         $response = $this->mint('doi', $this->meta());
         $response_object = $response->getWrappedObject();
         $response->GetStatusCode()->shouldEqual(201);
@@ -105,6 +114,7 @@ class ConnectionSpec extends ObjectBehavior
     
     function it_should_get_identifier_metadata()
     {
+        $this->beConstructedWith($this->dev_shoulders());
         $identifier = "doi:10.5072/FK2".uniqid();
         $this->existing_identifier($identifier, $this->meta());
         
@@ -120,7 +130,7 @@ class ConnectionSpec extends ObjectBehavior
     
     function it_should_modify_identifier_metadata()
     {
-        
+        $this->beConstructedWith($this->dev_shoulders());
         $identifier = "doi:10.5072/FK2".uniqid();
         $this->existing_identifier($identifier, $this->meta());
         
@@ -146,6 +156,7 @@ class ConnectionSpec extends ObjectBehavior
     
     function it_should_delete_reserved_identifiers()
     {
+        $this->beConstructedWith($this->dev_shoulders());
         $identifier = "doi:10.5072/FK2".uniqid();
         $meta = $this->meta();
         $meta['_status'] = 'reserved';
@@ -170,6 +181,14 @@ class ConnectionSpec extends ObjectBehavior
     //
     // Helper functions
     //////////////////////////////////////////////
+    
+    function dev_shoulders($type = 'doi')
+    {
+        return array(
+            'doi_shoulder' => $this::DEV_DOI_SHOULDER,
+            'ark_shoulder' => $this::DEV_ARK_SHOULDER
+        );
+    }
     
     function existing_identifier($identifier, $meta)
     {
