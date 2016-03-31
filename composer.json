@@ -1,4 +1,16 @@
 {
+    "name": "olendorf/ezid-php",
+    "description": "A library to simplify interacting with the EZID API for managing DOIs and ARKs.",
+    "type": "library",
+    "keywords": ["DOI", "ARK", "API", "rest", "client", "HTTP client"],
+    "homepage": "https://github.com/olendorf/ezid-php",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Robert Olendorf",
+            "email": "drolendorf@gmail.com"
+        }
+    ],
     "require": {
       "guzzlehttp/guzzle": "~6.0"
     },
@@ -9,5 +21,6 @@
     "config": {
         "bin-dir": "bin"
     },
-    "autoload": {"psr-0": {"": "src"}}
+    "autoload": {"psr-0": {"ezid\\": "src/"}},
+    "autoload": {"psr-4": {"ezid\\": "spec/"}}
 }
