@@ -83,12 +83,56 @@ $client = new ezid\Connection($config);
 *NOTE: Ezid-php uses Guzzle. Refer to https://github.com/guzzle/guzzle for more documentation on working with guzzle responses.
 
 ```php
+ // Getting Server Status
  $response = $this->status();
  
- echo $response->getBody()->getContents();
+ echo $response->getBody()->getContents(); // success: EZID is up
  
- \\ success: EZID is up
+ // Creating an identifier
+ $meta = [
+            "creator" => 'Random Citizen',
+            'title' => 'Random Thoughts',
+            'publisher' => 'Random Houses',
+            'publicationyear' => '2015',
+            'resourcetype' => 'Text'
+        ];
+ $identifier = $client->doi_shoulder.uniqid(); // Just using uniqid() to generate a  unique string.
+ $response = $client->create($identifier, $meta);
+ 
+ echo $response->GetStatusCode();  // 201
+ 
+ // Minting an identifier $meta = [
+            "creator" => 'Random Citizen',
+            'title' => 'Random Thoughts',
+            'publisher' => 'Random Houses',
+            'publicationyear' => '2015',
+            'resourcetype' => 'Text'
+        ];
+        
+ $response = $client->mint('doi', $meta);  //uses the shoulder specified in config or on creation of the client.
+ 
+ echo $response->GetStatusCode();  // 201
+ 
+ // Retrieving Identifier Metadata
+ 
+ $response = $client->get_identifier_metadata($identifier);  // will get the meta sent in create()
+ echo (string)$response->getBody();  // Key value pair formatted string with metadata
+      // datacite.creator: Random Citizen
+      // datacite.title : Random Thoughts
+      //
+      
+ // You can extract this using parse_response_metadata()
+ 
+ $meta_array = $client->parse_response_metadata((string)$response->getBody()); // Guzzle returns a stream, cast it to a string
+ 
+ print_r($meta_array);  
+    // (
+    //    [datacite.creator] => 'Random Citizen',
+    //    [datacite.title] => 'Random Thoughts',
+    //    ...
+    //  )
 ```
+
 
 
 
