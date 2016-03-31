@@ -41,13 +41,10 @@ Edit your compuser.json to include the following
 
 ```json
 {
-   ...
    
    "require": {
       "olendorf/ezid-php": ">=0.0.0"
-    },
-    
-    ...
+    }
 }
 ```
 
@@ -83,10 +80,18 @@ $client = new ezid\Connection($config);
 
 ## Working With Identifiers
 
-Getting server status.
+*NOTE: Ezid-php uses Guzzle. Refer to https://github.com/guzzle/guzzle for more documentation on working with guzzle responses.
 
 ```php
+ $response = $this->status();
+ 
+ echo $response->getBody()->getContents();
+ 
+ \\ success: EZID is up
 ```
+
+
+
 
 
 ## Contributing
