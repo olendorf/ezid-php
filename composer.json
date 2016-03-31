@@ -22,5 +22,5 @@
         "bin-dir": "bin"
     },
     "autoload": {"psr-0": {"ezid\\": "src/"}},
-    "autoload": {"psr-4": {"ezid\\": "spec/"}}
+    "autoload-dev": {"psr-4": {"ezid\\": "spec/"}}
 }
