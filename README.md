@@ -51,12 +51,15 @@ Edit your compuser.json to include the following
 ## Configuring
 
 Copy and rename ```src/ezid/ezid.json.example``` to ```src/ezid/ezid.json```. Then
-edit it to reflect your credentials and shoulders. If do not wish to use the config
-file just delete it (or don't copy and rename in the first place).
+edit it to reflect your credentials and shoulders. If upi do not wish to use the config
+file just delete it (or don't copy and rename in the first place). You can always override 
+the values as you wish.
 
 ## Usage
 
-## Creating The Connection
+
+
+### Creating The Connection
 
 ```php
 /**
@@ -78,9 +81,7 @@ $client = new ezid\Connection($config);
 
 ```
 
-## Working With Identifiers
-
-*NOTE: Ezid-php uses Guzzle. Refer to https://github.com/guzzle/guzzle for more documentation on working with guzzle responses.
+### Creating and minting identifiers
 
 ```php
  // Getting Server Status
@@ -106,14 +107,17 @@ $client = new ezid\Connection($config);
  $response = $client->mint('doi', $meta);  //uses the shoulder specified in config or on creation of the client.
  
  echo $response->GetStatusCode();  // 201
- 
- // Retrieving Identifier Metadata
+```
+
+### Retrieving Metadata
+
+```php
  
  $response = $client->get_identifier_metadata($identifier);  // will get the meta sent in create()
  echo (string)$response->getBody();  // Key value pair formatted string with metadata
       // datacite.creator: Random Citizen
       // datacite.title : Random Thoughts
-      //
+      // ...
       
  // You can extract this using parse_response_metadata()
  
@@ -127,17 +131,22 @@ $client = new ezid\Connection($config);
     //  )
     
     
- // Modifying the metadata
- 
+```
+
+### Modifying the metadata
+
+```php 
  $new_meta = [
             "creator" => 'Anonymous Resident',
             'resourcetype' => ''
             ];
  $response = $client->modify_identifier_metadata($identifier, $new_meta);
  echo $response->GetStatusCode()  // 200
- 
- // Deleting an identifier (must be reserved)
- 
+```
+
+### Deleting an identifier (must be reserved)
+
+```php
  $response = $client->delete_identifier($identifier);
  echo $response->GetStatusCode()  // 200
 ```
