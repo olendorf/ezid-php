@@ -131,6 +131,21 @@ $client = new ezid\Connection($config);
     //    [datacite.title] => 'Random Thoughts',
     //    ...
     //  )
+    
+    
+ // Modifying the metadata
+ 
+ $new_meta = [
+            "creator" => 'Anonymous Resident',
+            'resourcetype' => ''
+            ];
+ $response = $client->modify_identifier_metadata($identifier, $new_meta);
+ echo $response->GetStatusCode()  // 200
+ 
+ // Deleting an identifier (must be reserved)
+ 
+ $response = $client->delete_identifier($identifier);
+ echo $response->GetStatusCode()  // 200
 ```
 
 
