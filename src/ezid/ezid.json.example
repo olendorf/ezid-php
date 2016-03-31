@@ -3,6 +3,6 @@
     "password": "bar",
     "doi_shoulder": "doi:10.5072/FK2",  
     "ark_shoulder": "ark:/99999/fk4 ",
-    "__comment1": "the shoulders are test shoulders provided by EZID. update to fit your own in production."
+    "__comment1": "the shoulders are test shoulders provided by EZID. update to fit your own in production.",
     "__comment2": "update to use your own credentials"
 }
