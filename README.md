@@ -77,8 +77,8 @@ $client = new ezid\Connection();
 $config = array(
                  "username"=>"RandomCitizen",
                  "password"=>"foobar123",
-                 "doi_shoulder"=>"doi:10.5072/FK2",
-                 "ark_shoulder"=>""ark:/99999/fk4"
+                 "doi_shoulder"=>"doi:10.5072/FK2",  # optional and make sure you use the right shoulder. 
+                 "ark_shoulder"=>""ark:/99999/fk4"   # same as above
                );
 $client = new ezid\Connection($config);
 
